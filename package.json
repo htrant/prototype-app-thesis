@@ -14,7 +14,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "style": "sh ./bashscripts/checkstyle.sh",
-    "deploy": "sh ./bashscripts/deploy.sh $STAGE"
+    "deploy": "sh ./bashscripts/deploy.sh"
   },
   "repository": {
     "type": "git",

@@ -20,4 +20,3 @@ functions:
       - http:
           method: get
           path: probe/health
-          cors: true
