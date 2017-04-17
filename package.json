@@ -1,0 +1,24 @@
+{
+  "name": "prototype-app",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "serverless": "^1.11.0"
+  },
+  "devDependencies": {
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb-base": "^11.1.3",
+    "eslint-plugin-import": "^2.2.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "style": "sh ./bashscripts/checkstyle.sh",
+    "deploy": "sh ./bashscripts/deploy.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "license": "ISC"
+}

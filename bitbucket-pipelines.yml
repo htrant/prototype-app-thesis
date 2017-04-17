@@ -1,0 +1,17 @@
+image: node:6.10.2
+pipelines:
+  branches:
+    master:
+      - step:
+          script:
+            - npm install
+            - npm run style
+            - echo 'Deploying to PRODUCTION environment...'
+            - npm run deploy prod
+    develop:
+      - step:
+          script:
+            - npm install
+            - npm run style
+            - echo 'Deploying to STAGING environment...'
+            - npm run deploy staging
