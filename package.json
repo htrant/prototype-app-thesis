@@ -13,7 +13,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "style": "sh ./bashscripts/checkstyle.sh"
+    "style": "sh ./bashscripts/checkstyle.sh",
+    "deploy": "sh ./bashscripts/deploy.sh $STAGE"
   },
   "repository": {
     "type": "git",
