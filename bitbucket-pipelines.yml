@@ -7,11 +7,11 @@ pipelines:
             - npm install
             - npm run style
             - echo 'Deploying to PRODUCTION environment...'
-            - npm run deploy prod
+            - sh ./bashscripts/deploy.sh "prod"
     develop:
       - step:
           script:
             - npm install
             - npm run style
             - echo 'Deploying to STAGING environment...'
-            - npm run deploy staging
+            - sh ./bashscripts/deploy.sh "staging"
