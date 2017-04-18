@@ -7,6 +7,8 @@ provider:
   stage: dev
   region: eu-west-1
   profile: awsdev
+  apiKeys:
+    - ${opt:stage}-devkey
 
 functions:
   probeGetHealth:
@@ -19,3 +21,4 @@ functions:
       - http:
           method: get
           path: probe/health
+          private: true
