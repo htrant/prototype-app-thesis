@@ -7,7 +7,7 @@ COUNTER=0
 
 for file in $JS_FILES; do
   CHECK_RESULT=$(node_modules/.bin/eslint $file)
-  if [[ -z "$CHECK_RESULT" ]]; then
+  if [ -z "$CHECK_RESULT" ]; then
     echo "$(tput setaf 2)$file: Passed"
   else
     echo "$(tput setaf 1)$file: Failed"
