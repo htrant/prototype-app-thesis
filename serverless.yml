@@ -25,3 +25,19 @@ functions:
           method: get
           path: ${self:custom.apiversion}/probe/health
           private: true
+  countryGetAll:
+    handler: functions/country/countryhandler.getAllCountries
+    description: Get list of all countries
+    events:
+      - http:
+          method: get
+          path: ${self:custom.apiversion}/country
+          private: true
+  countryGetById:
+    handler: functions/country/countryhandler.getCountryById
+    description: Get a country by Id
+    events:
+      - http:
+          method: get
+          path: ${self:custom.apiversion}/country/{id}
+          private: true
