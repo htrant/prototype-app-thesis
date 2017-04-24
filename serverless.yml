@@ -6,7 +6,7 @@ provider:
   name: aws
   profile: awsdev
   region: eu-west-1
-  stage: dev
+  stage: ${opt:stage}
   runtime: nodejs6.10
   memorySize: 128
   timeout: 6
@@ -24,6 +24,14 @@ functions:
       - http:
           method: get
           path: ${self:custom.apiversion}/probe/health
+          private: true
+  actorGetAll:
+    handler: funcitons/actor/actorhandler.getAllActors
+    description: Get list of all actors
+    events:
+      - http:
+          method: get
+          path: ${self:custom.apiversion}/actors
           private: true
   countryGetAll:
     handler: functions/country/countryhandler.getAllCountries
