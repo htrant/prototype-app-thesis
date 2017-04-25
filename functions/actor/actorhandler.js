@@ -26,3 +26,21 @@ module.exports.getActorById = (event, context, callback) => {
       callback(exp);
     });
 };
+
+module.exports.createNewActor = (event, context, callback) => {
+  Actor.max('actor_id')
+    .then((id) => {
+      const nextId = id + 1;
+      return Actor.build({
+        actor_id: nextId,
+        first_name: event.first_name,
+        last_name: event.last_name
+      }).save();
+    })
+    .then((actor) => {
+      callback(null, lambdaResponse(actor));
+    })
+    .catch((exp) => {
+      callback(exp);
+    });
+};

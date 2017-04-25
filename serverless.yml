@@ -41,6 +41,14 @@ functions:
           method: get
           path: ${self:custom.apiversion}/actor/{id}
           private: true
+  actorCreateNew:
+    handler: functions/actor/actorhandler.createNewActor
+    description: Create new actor and save to database
+    events:
+      - http:
+          method: post
+          path: ${self:custom.apiversion}/actor
+          private: true
   countryGetAll:
     handler: functions/country/countryhandler.getAllCountries
     description: Get list of all countries
