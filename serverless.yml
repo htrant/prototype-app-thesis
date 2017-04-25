@@ -26,7 +26,7 @@ functions:
           path: ${self:custom.apiversion}/probe/health
           private: true
   actorGetAll:
-    handler: funcitons/actor/actorhandler.getAllActors
+    handler: functions/actor/actorhandler.getAllActors
     description: Get list of all actors
     events:
       - http:
