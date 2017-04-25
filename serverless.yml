@@ -31,7 +31,15 @@ functions:
     events:
       - http:
           method: get
-          path: ${self:custom.apiversion}/actors
+          path: ${self:custom.apiversion}/actor
+          private: true
+  actorGetById:
+    handler: functions/actor/actorhandler.getActorById
+    description: Get an actor by id
+    events:
+      - http:
+          method: get
+          path: ${self:custom.apiversion}/actor/{id}
           private: true
   countryGetAll:
     handler: functions/country/countryhandler.getAllCountries
