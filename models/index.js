@@ -14,7 +14,7 @@ const dbconfig = {
   pool: {
     max: 5,
     min: 0,
-    idle: 10000
+    idle: 4000
   }
 };
 const sqlz = new Sequelize(process.env.DB_LOCAL, dbconfig);
