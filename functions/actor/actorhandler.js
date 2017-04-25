@@ -5,11 +5,11 @@ module.exports.getAllActors = (event, context, callback) => {
     .then((actors) => {
       const response = {
         statusCode: 200,
-        body: JSON.stringify(acotrs)
+        body: JSON.stringify(actors)
       };
-      callabck(null, response);
+      callback(null, response);
     })
     .catch((exp) => {
       callback(exp);
     });
-}
+};
