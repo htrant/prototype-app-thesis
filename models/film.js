@@ -49,14 +49,6 @@ module.exports = (sequelize, DataTypes) => (sequelize.define('Film', {
     type: DataTypes.DATE,
     allowNull: false,
     defaultValue: sequelize.NOW
-  },
-  special_features: {
-    type: DataTypes.ARRAY(DataTypes.STRING),
-    allowNull: true
-  },
-  fulltext: {
-    type: DataTypes.HSTORE,
-    allowNull: false
   }
 }, {
   schema: 'prototype',
