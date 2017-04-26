@@ -1,6 +1,6 @@
 service: prototype-app
 
-frameworkVersion: "=1.11.0"
+frameworkVersion: ">=1.11.0"
 
 provider:
   name: aws
