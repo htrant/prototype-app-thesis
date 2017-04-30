@@ -68,3 +68,20 @@ module.exports.updateActor = (event, context, callback) => {
       callback(exp);
     });
 };
+
+module.exports.deleteActor = (event, context, callback) => {
+  Actor.destroy({
+    where: {
+      id: event.id
+    },
+    limit: 1
+  })
+    .then((result) => {
+      callback(null, lambdaResponse({
+        message: result
+      }));
+    })
+    .catch((exp) => {
+      callback(exp);
+    });
+};

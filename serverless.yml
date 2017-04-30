@@ -57,6 +57,14 @@ functions:
           method: put
           path: ${self:custom.apiversion}/actor/{id}
           private: true
+  actorDelete:
+    handler: functions/actor/actorhandler.deleteActor
+    description: Delete an actor
+    events:
+      - http:
+          method: delete
+          path: ${self:custom.apiversion}/actor/{id}
+          private: true
   countryGetAll:
     handler: functions/country/countryhandler.getAllCountries
     description: Get list of all countries
