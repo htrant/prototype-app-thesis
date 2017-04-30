@@ -6,4 +6,6 @@ rules:
     - error
     - never
   no-param-reassign:
-    - 0
+    - off
+  arrow-body-style:
+    - off

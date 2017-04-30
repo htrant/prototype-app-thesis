@@ -46,13 +46,18 @@ module.exports.createNewActor = (event, context, callback) => {
 };
 
 module.exports.updateActor = (event, context, callback) => {
-  // thisSession.hasOwnProperty('merchant_id')
-  // var y = (x == 2 ? "yes" : "no");
   Actor.findById(event.id)
     .then((actor) => {
-      actor.first_name = event.first_name !== undefined ? event.first_name : actor.first_name;
-      actor.last_name = event.last_name !== undefined ? event.last_name : actor.last_name;
-      console.log(actor, null, 2);
+      return Actor.update(
+        {
+          first_name: (event.first_name === undefined ? actor.first_name : event.first_name),
+          last_name: (event.last_name === undefined ? actor.last_name : event.last_name)
+        },
+        { where: { actor_id: event.id } }
+      );
+    })
+    .then((result) => {
+      callback(null, lambdaResponse(result));
     })
     .catch((exp) => {
       callback(exp);
