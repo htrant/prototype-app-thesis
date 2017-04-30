@@ -44,3 +44,17 @@ module.exports.createNewActor = (event, context, callback) => {
       callback(exp);
     });
 };
+
+module.exports.updateActor = (event, context, callback) => {
+  // thisSession.hasOwnProperty('merchant_id')
+  // var y = (x == 2 ? "yes" : "no");
+  Actor.findById(event.id)
+    .then((actor) => {
+      actor.first_name = event.first_name !== undefined ? event.first_name : actor.first_name;
+      actor.last_name = event.last_name !== undefined ? event.last_name : actor.last_name;
+      console.log(actor, null, 2);
+    })
+    .catch((exp) => {
+      callback(exp);
+    });
+};

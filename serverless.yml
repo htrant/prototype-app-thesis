@@ -49,6 +49,14 @@ functions:
           method: post
           path: ${self:custom.apiversion}/actor
           private: true
+  actorUpdate:
+    handler: functions/actor/actorhandler.updateActor
+    description: Update information of an actor
+    events:
+      - http:
+          method: put
+          path: ${self:custom.apiversion}/actor/{id}
+          private: true
   countryGetAll:
     handler: functions/country/countryhandler.getAllCountries
     description: Get list of all countries
