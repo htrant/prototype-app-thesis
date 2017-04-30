@@ -1,4 +1,5 @@
 const Actor = require('../../models').Actor;
+const moment = require('moment');
 
 const lambdaResponse = (object) => {
   return {
@@ -48,13 +49,17 @@ module.exports.createNewActor = (event, context, callback) => {
 module.exports.updateActor = (event, context, callback) => {
   Actor.findById(event.id)
     .then((actor) => {
-      return Actor.update(
-        {
-          first_name: (event.first_name === undefined ? actor.first_name : event.first_name),
-          last_name: (event.last_name === undefined ? actor.last_name : event.last_name)
+      const actorData = {
+        first_name: (event.first_name === undefined ? actor.first_name : event.first_name),
+        last_name: (event.last_name === undefined ? actor.last_name : event.last_name),
+        last_update: moment()
+      };
+      return Actor.update(actorData, {
+        where: {
+          actor_id: event.id
         },
-        { where: { actor_id: event.id } }
-      );
+        limit: 1
+      });
     })
     .then((result) => {
       callback(null, lambdaResponse(result));
