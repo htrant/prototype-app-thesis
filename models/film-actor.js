@@ -2,14 +2,12 @@ module.exports = (sequelize, DataTypes) => (sequelize.define('FilmActor', {
   actor_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    primaryKey: true,
-    autoIncrement: true
+    primaryKey: true
   },
   film_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    primaryKey: true,
-    autoIncrement: true
+    primaryKey: true
   },
   last_update: {
     type: DataTypes.DATE,

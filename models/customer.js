@@ -38,7 +38,7 @@ module.exports = (sequelize, DataTypes) => (sequelize.define('Customer', {
   last_update: {
     type: DataTypes.DATE,
     allowNull: true,
-    defaultValue: sequelize.NOW
+    defaultValue: DataTypes.NOW
   },
   active: {
     type: DataTypes.INTEGER,
