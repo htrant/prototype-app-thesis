@@ -24,3 +24,5 @@ else
   tput setaf 7
   exit 1
 fi
+
+node models/index.js

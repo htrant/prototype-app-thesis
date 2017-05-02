@@ -14,5 +14,4 @@ pipelines:
             - npm install --quiet
             - npm run style
             - sh ./bashscripts/setdb.sh "staging" $DB_STAGING
-            - node models/index.js
             - sh ./bashscripts/deploy.sh "staging"
