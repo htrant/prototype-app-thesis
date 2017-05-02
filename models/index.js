@@ -17,7 +17,16 @@ const dbconfig = {
     idle: 4000
   }
 };
-const sqlz = new Sequelize(process.env.DB_LOCAL, dbconfig);
+
+let dbconn;
+if (process.env.DB_STAGING) {
+  dbconn = process.env.DB_STAGING;
+} else if (process.env.DB_PROD) {
+  dbconn = process.env.DB_PROD;
+} else {
+  dbconn = process.env.DB_LOCAL;
+}
+const sqlz = new Sequelize(dbconn, dbconfig);
 
 const db = {};
 fs.readdirSync(__dirname)
