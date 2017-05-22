@@ -1,29 +1,32 @@
-const Country = require('../../models').Country;
+const pgclient = require('../helper/pgclient');
 
 module.exports.getAllCountries = (event, context, callback) => {
-  Country.findAll()
-    .then((countries) => {
+  pgclient.query('SELECT * FROM prototype.country')
+    .then((res) => {
       const response = {
         statusCode: 200,
-        body: JSON.stringify(countries)
+        body: JSON.stringify(res.rows)
       };
       callback(null, response);
     })
-    .catch((exp) => {
-      callback(exp);
+    .catch((err) => {
+      callback(err);
     });
 };
 
 module.exports.getCountryById = (event, context, callback) => {
-  Country.findById(event.id)
-    .then((country) => {
+  const queryCmd = `SELECT * FROM prototype.country 
+                    WHERE country_id = ${event.id} 
+                    LIMIT 1`;
+  pgclient.query(queryCmd)
+    .then((res) => {
       const response = {
         statusCode: 200,
-        body: JSON.stringify(country)
+        body: JSON.stringify(res.rows[0])
       };
       callback(null, response);
     })
-    .catch((exp) => {
-      callback(exp);
+    .catch((err) => {
+      callback(err);
     });
 };
