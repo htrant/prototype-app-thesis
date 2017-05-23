@@ -1,13 +1,17 @@
 const pgclient = require('../helper/pgclient');
 
 module.exports.getAllCountries = (event, context, callback) => {
-  pgclient.query('SELECT * FROM prototype.country')
-    .then((res) => {
-      const response = {
-        statusCode: 200,
-        body: JSON.stringify(res.rows)
-      };
-      callback(null, response);
+  pgclient.connect()
+    .then((client) => {
+      client.query('SELECT * FROM prototype.country')
+        .then((res) => {
+          client.release(true);
+          const response = {
+            statusCode: 200,
+            body: JSON.stringify(res.rows)
+          };
+          callback(null, response);
+        });
     })
     .catch((err) => {
       callback(err);
