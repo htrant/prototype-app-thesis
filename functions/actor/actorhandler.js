@@ -1,5 +1,7 @@
-const Actor = require('../../models').Actor;
+const pgclient = require('../helper/pgclient');
 const moment = require('moment');
+
+const timeformat = 'YYYY-MM-DD HH:mm:ssZ';
 
 const lambdaResponse = (object) => {
   return {
@@ -9,79 +11,92 @@ const lambdaResponse = (object) => {
 };
 
 module.exports.getAllActors = (event, context, callback) => {
-  Actor.findAll()
-    .then((actors) => {
-      callback(null, lambdaResponse(actors));
+  pgclient.query('SELECT * FROM prototype.actor')
+    .then((res) => {
+      callback(null, lambdaResponse(res.rows));
     })
-    .catch((exp) => {
-      callback(exp);
+    .catch((err) => {
+      callback(err);
     });
 };
 
 module.exports.getActorById = (event, context, callback) => {
-  Actor.findById(event.id)
-    .then((actor) => {
-      callback(null, lambdaResponse(actor));
+  const queryCmd = `SELECT * FROM prototype.actor 
+                    WHERE actor_id = ${event.id} 
+                    LIMIT 1`;
+  pgclient.query(queryCmd)
+    .then((res) => {
+      callback(null, lambdaResponse(res.rows[0]));
     })
-    .catch((exp) => {
-      callback(exp);
+    .catch((err) => {
+      callback(err);
     });
 };
 
 module.exports.createNewActor = (event, context, callback) => {
-  Actor.max('actor_id')
-    .then((id) => {
-      const nextId = id + 1;
-      return Actor.build({
-        actor_id: nextId,
-        first_name: event.first_name,
-        last_name: event.last_name
-      }).save();
+  const lastUpdate = moment().format(timeformat);
+  const queryCmd = `INSERT INTO prototype.actor (first_name, last_name, last_update)
+                    VALUES ('${event.first_name}', '${event.last_name}', '${lastUpdate}')
+                    RETURNING last_update`;
+  pgclient.query(queryCmd)
+    .then((res) => {
+      callback(null, lambdaResponse(res.rows[0]));
     })
-    .then((actor) => {
-      callback(null, lambdaResponse(actor));
-    })
-    .catch((exp) => {
-      callback(exp);
+    .catch((err) => {
+      callback(err);
     });
 };
 
 module.exports.updateActor = (event, context, callback) => {
-  Actor.findById(event.id)
-    .then((actor) => {
-      const actorData = {
-        first_name: (event.first_name === undefined ? actor.first_name : event.first_name),
-        last_name: (event.last_name === undefined ? actor.last_name : event.last_name),
-        last_update: moment()
-      };
-      return Actor.update(actorData, {
-        where: {
-          actor_id: event.id
-        },
-        limit: 1
+  if (event.first_name === undefined || event.last_name === undefined) {
+    callback('Empty first name or last name');
+  } else {
+    const updateQuery = `UPDATE prototype.actor
+                      SET first_name = '${event.first_name}',
+                          last_name = '${event.last_name}',
+                          last_update = '${lastUpdate}'
+                      WHERE actor_id = ${event.id}
+                      RETURNING last_update`;
+    const lastUpdate = moment().format(timeformat);
+    const selQuery = `SELECT COUNT(actor_id) 
+                      FROM prototype.actor
+                      WHERE actor_id = ${event.id}`;
+    pgclient.query(selQuery)
+      .then((res) => {
+        const count = JSON.parse(JSON.stringify(res.rows[0])).count;
+        if (count === '0') {
+          return Promise.reject(new Error('actor not found'));
+        }
+        return pgclient.query(updateQuery);
+      })
+      .then((res) => {
+        callback(null, lambdaResponse(res.rows[0]));
+      })
+      .catch((err) => {
+        callback(err);
       });
-    })
-    .then((result) => {
-      callback(null, lambdaResponse(result));
-    })
-    .catch((exp) => {
-      callback(exp);
-    });
+  }
 };
 
 module.exports.deleteActor = (event, context, callback) => {
-  Actor.destroy({
-    where: {
-      id: event.id
-    },
-    limit: 1
-  })
-    .then((result) => {
-      callback(null, lambdaResponse({
-        message: result
-      }));
+  const delQuery = `DELETE FROM prototype.actor
+                    WHERE actor_id = ${event.id}
+                    RETURNING last_update`;
+  const selQuery = `SELECT COUNT(actor_id) 
+                    FROM prototype.actor
+                    WHERE actor_id = ${event.id}`;
+  pgclient.query(selQuery)
+    .then((res) => {
+      const count = JSON.parse(JSON.stringify(res.rows[0])).count;
+      if (count === '0') {
+        return Promise.reject(new Error('actor not found'));
+      }
+      return pgclient.query(delQuery);
     })
-    .catch((exp) => {
-      callback(exp);
+    .then((res) => {
+      callback(null, lambdaResponse(res.rows[0]));
+    })
+    .catch((err) => {
+      callback(err);
     });
 };
