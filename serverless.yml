@@ -9,7 +9,7 @@ provider:
   stage: ${opt:stage}
   runtime: nodejs6.10
   memorySize: 128
-  timeout: 30
+  timeout: 6
   apiKeys:
     - ${opt:stage}-devkey
 
