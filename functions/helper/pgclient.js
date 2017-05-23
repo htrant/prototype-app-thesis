@@ -25,8 +25,5 @@ const config = {
 };
 
 const pool = new Pool(config);
-pool.connect();
 
-module.exports.query = (text, values) => {
-  return pool.query(text, values);
-};
+module.exports = pool;
