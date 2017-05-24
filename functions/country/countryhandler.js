@@ -22,13 +22,17 @@ module.exports.getCountryById = (event, context, callback) => {
   const queryCmd = `SELECT * FROM prototype.country 
                     WHERE country_id = ${event.id} 
                     LIMIT 1`;
-  pgclient.query(queryCmd)
-    .then((res) => {
-      const response = {
-        statusCode: 200,
-        body: JSON.stringify(res.rows[0])
-      };
-      callback(null, response);
+  pgclient.connect()
+    .then((client) => {
+      client.query(queryCmd)
+        .then((res) => {
+          client.release(true);
+          const response = {
+            statusCode: 200,
+            body: JSON.stringify(res.rows[0])
+          };
+          callback(null, response);
+        });
     })
     .catch((err) => {
       callback(err);
