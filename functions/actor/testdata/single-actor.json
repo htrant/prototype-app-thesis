@@ -1,0 +1,37 @@
+{
+  "resource": "/v1/actor/{id}",
+  "path": "/v1/actor/200",
+  "httpMethod": "GET",
+  "headers": null,
+  "queryStringParameters": null,
+  "pathParameters": {
+    "id": "200"
+  },
+  "stageVariables": null,
+  "requestContext": {
+    "path": "/v1/actor/{id}",
+    "accountId": null,
+    "resourceId": "eidv1o",
+    "stage": "staging",
+    "requestId": "cjg67wc6-7b71-11e6-9a41-93e8djgh47eef",
+    "identity": {
+      "cognitoIdentityPoolId": null,
+      "accountId": "427463004857",
+      "cognitoIdentityId": null,
+      "caller": null,
+      "apiKey": null,
+      "sourceIp": "127.0.0.1",
+      "accessKey": "ASHQTPER2ZLKIGSD34AQ",
+      "cognitoAuthenticationType": null,
+      "cognitoAuthenticationProvider": null,
+      "userArn": "arn:aws:iam::429598745657:root",
+      "userAgent": "Custom User Agent String",
+      "user": null
+    },
+    "resourcePath": "/v1/actor/{id}",
+    "httpMethod": "GET",
+    "apiId": "12363289"
+  },
+  "body": null,
+  "isBase64Encoded": false
+}
