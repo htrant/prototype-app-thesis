@@ -19,7 +19,7 @@ module.exports.getAllCountries = (event, context, callback) => {
 };
 
 module.exports.getCountryById = (event, context, callback) => {
-  const queryCmd = `SELECT * FROM prototype.country 
+  const queryCmd = `SELECT * FROM prototype.country
                     WHERE country_id = ${event.pathParameters.id}
                     LIMIT 1`;
   pgclient.connect()
@@ -27,11 +27,15 @@ module.exports.getCountryById = (event, context, callback) => {
       client.query(queryCmd)
         .then((res) => {
           client.release(true);
-          const response = {
-            statusCode: 200,
-            body: JSON.stringify(res.rows[0])
-          };
-          callback(null, response);
+          if (JSON.parse(JSON.stringify(res.rows[0]))) {
+            const response = {
+              statusCode: 200,
+              body: JSON.stringify(res.rows[0])
+            };
+            callback(null, response);
+          } else {
+            return Promise.reject(new Error('Country not found'));
+          }
         });
     })
     .catch((err) => {
