@@ -20,7 +20,7 @@ module.exports.getAllCountries = (event, context, callback) => {
 
 module.exports.getCountryById = (event, context, callback) => {
   const queryCmd = `SELECT * FROM prototype.country 
-                    WHERE country_id = ${event.id} 
+                    WHERE country_id = ${event.pathParameters.id}
                     LIMIT 1`;
   pgclient.connect()
     .then((client) => {
