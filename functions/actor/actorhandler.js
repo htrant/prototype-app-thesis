@@ -26,7 +26,7 @@ module.exports.getAllActors = (event, context, callback) => {
 
 module.exports.getActorById = (event, context, callback) => {
   const queryCmd = `SELECT * FROM prototype.actor 
-                    WHERE actor_id = ${event.id} 
+                    WHERE actor_id = ${event.pathParameters.id} 
                     LIMIT 1`;
   pgclient.connect()
     .then((client) => {
@@ -65,14 +65,14 @@ module.exports.updateActor = (event, context, callback) => {
   } else {
     const lastUpdate = moment().format(timeformat);
     const updateQuery = `UPDATE prototype.actor
-                      SET first_name = '${event.first_name}',
+                         SET first_name = '${event.first_name}',
                           last_name = '${event.last_name}',
                           last_update = '${lastUpdate}'
-                      WHERE actor_id = ${event.id}
-                      RETURNING last_update`;
+                         WHERE actor_id = ${event.pathParameters.id}
+                         RETURNING last_update`;
     const selQuery = `SELECT COUNT(actor_id) 
                       FROM prototype.actor
-                      WHERE actor_id = ${event.id}`;
+                      WHERE actor_id = ${event.pathParameters.id}`;
     pgclient.connect()
       .then((client) => {
         client.query(selQuery)
@@ -96,11 +96,11 @@ module.exports.updateActor = (event, context, callback) => {
 
 module.exports.deleteActor = (event, context, callback) => {
   const delQuery = `DELETE FROM prototype.actor
-                    WHERE actor_id = ${event.id}
+                    WHERE actor_id = ${event.pathParameters.id}
                     RETURNING last_update`;
   const selQuery = `SELECT COUNT(actor_id) 
                     FROM prototype.actor
-                    WHERE actor_id = ${event.id}`;
+                    WHERE actor_id = ${event.pathParameters.id}`;
   pgclient.connect()
     .then((client) => {
       client.query(selQuery)
