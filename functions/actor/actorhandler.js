@@ -36,8 +36,11 @@ module.exports.getActorById = (event, context, callback) => {
           if (!JSON.parse(JSON.stringify(res.rows[0]))) {
             return Promise.reject(new Error('Actor not found'));
           }
-          callback(null, lambdaResponse(res.rows[0]));
+          return Promise.resolve(res.rows[0]);
         });
+    })
+    .then((response) => {
+      callback(null, lambdaResponse(response));
     })
     .catch((err) => {
       callback(err);
@@ -70,7 +73,7 @@ module.exports.updateActor = (event, context, callback) => {
   if (event.first_name && event.last_name) {
     callback(null, lambdaResponse({
       message: 'No update for this actor'
-    });
+    }));
   } else {
     const selQuery = `SELECT COUNT(actor_id)
                       FROM prototype.actor

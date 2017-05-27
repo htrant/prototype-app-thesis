@@ -27,16 +27,17 @@ module.exports.getCountryById = (event, context, callback) => {
       client.query(queryCmd)
         .then((res) => {
           client.release(true);
-          if (JSON.parse(JSON.stringify(res.rows[0]))) {
-            const response = {
-              statusCode: 200,
-              body: JSON.stringify(res.rows[0])
-            };
-            callback(null, response);
-          } else {
+          if (!JSON.parse(JSON.stringify(res.rows[0]))) {
             return Promise.reject(new Error('Country not found'));
           }
+          return Promise.resolve({
+            statusCode: 200,
+            body: JSON.stringify(res.rows[0])
+          });
         });
+    })
+    .then((response) => {
+      callback(null, response);
     })
     .catch((err) => {
       callback(err);
