@@ -4,14 +4,8 @@ pipelines:
     master:
       - step:
           script:
-            - npm install --quiet
-            - npm run style
-            - sh ./bashscripts/setdb.sh "staging" $DB_PROD
-            - sh ./bashscripts/deploy.sh "prod"
+            - sh ./bashscripts/pipeline.sh "prod" $DB_PROD
     develop:
       - step:
           script:
-            - npm install --quiet
-            - npm run style
-            - sh ./bashscripts/setdb.sh "staging" $DB_STAGING
-            - sh ./bashscripts/deploy.sh "staging"
+            - sh ./bashscripts/pipeline.sh "staging" $DB_STAGING
