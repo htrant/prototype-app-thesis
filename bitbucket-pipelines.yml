@@ -4,7 +4,7 @@ pipelines:
     master:
       - step:
           script:
-            - sh ./bashscripts/pipeline.sh "staging" $DB_STAGING
+            - sh ./bashscripts/pipeline.sh "prod" $DB_PROD
     develop:
       - step:
           script:
