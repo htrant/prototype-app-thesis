@@ -34,10 +34,10 @@ module.exports.getCountryById = (event, context, callback) => {
             statusCode: 200,
             body: JSON.stringify(res.rows[0])
           });
+        })
+        .then((response) => {
+          callback(null, response);
         });
-    })
-    .then((response) => {
-      callback(null, response);
     })
     .catch((err) => {
       callback(err);
