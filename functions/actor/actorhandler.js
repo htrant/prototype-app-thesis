@@ -146,7 +146,7 @@ module.exports.deleteActor = (event, context, callback) => {
                     WHERE actor_id = ${event.pathParameters.id}`;
   pgclient.connect()
     .then((client) => {
-      return pgclient.queryDatabase(client, selQuery);
+      return pgquery.queryDatabase(client, selQuery);
     })
     .then((res) => {
       if (!JSON.stringify(res.data.rows[0])) {
