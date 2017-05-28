@@ -58,10 +58,10 @@ module.exports.getActorById = (event, context, callback) => {
 };
 
 module.exports.createNewActor = (event, context, callback) => {
-  if (event.first_name && event.last_name) {
+  if (event.body.first_name && event.body.last_name) {
     const lastUpdate = moment().format(timeformat);
     const queryCmd = `INSERT INTO prototype.actor (first_name, last_name, last_update)
-                      VALUES ('${event.first_name}', '${event.last_name}', '${lastUpdate}')
+                      VALUES ('${event.body.first_name}', '${event.body.last_name}', '${lastUpdate}')
                       RETURNING last_update`;
     pgclient.connect()
       .then((client) => {
@@ -89,7 +89,7 @@ module.exports.createNewActor = (event, context, callback) => {
 };
 
 module.exports.updateActor = (event, context, callback) => {
-  if (event.first_name && event.last_name) {
+  if (event.body.first_name && event.body.last_name) {
     callback(null, lambdaResponse({
       message: 'No update for this actor'
     }));
@@ -116,8 +116,8 @@ module.exports.updateActor = (event, context, callback) => {
       })
       .then((res) => {
         const actor = res.actor;
-        const firstName = event.first_name ? event.first_name : actor.first_name;
-        const lastName = event.last_name ? event.last_name : actor.last_name;
+        const firstName = event.body.first_name ? event.body.first_name : actor.first_name;
+        const lastName = event.body.last_name ? event.body.last_name : actor.last_name;
         const lastUpdate = moment().format(timeformat);
         const updateQuery = `UPDATE prototype.actor
                              SET first_name = '${firstName}',
