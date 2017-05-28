@@ -1,5 +1,20 @@
 const pgclient = require('../helper/pgclient');
 
+function queryDatabase(client, query) {
+  return new Promise((resolve, reject) => {
+    client.query(query)
+      .then((res) => {
+        resolve({
+          client,
+          data: res
+        });
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+}
+
 module.exports.getAllCountries = (event, context, callback) => {
   pgclient.connect()
     .then((client) => {
@@ -24,20 +39,20 @@ module.exports.getCountryById = (event, context, callback) => {
                     LIMIT 1`;
   pgclient.connect()
     .then((client) => {
-      client.query(queryCmd)
-        .then((res) => {
-          client.release(true);
-          if (!JSON.parse(JSON.stringify(res.rows[0]))) {
-            return Promise.reject(new Error('Country not found'));
-          }
-          return Promise.resolve({
-            statusCode: 200,
-            body: JSON.stringify(res.rows[0])
-          });
-        })
-        .then((response) => {
-          callback(null, response);
-        });
+      return queryDatabase(client, queryCmd);
+    })
+    .then((res) => {
+      res.client.release(true);
+      if (!JSON.stringify(res.data.rows[0])) {
+        return Promise.reject(new Error('Country not found'));
+      }
+      return Promise.resolve({
+        statusCode: 200,
+        body: JSON.stringify(res.data.rows[0])
+      });
+    })
+    .then((res) => {
+      callback(null, res);
     })
     .catch((err) => {
       callback(err);
