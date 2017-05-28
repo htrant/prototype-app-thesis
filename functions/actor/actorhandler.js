@@ -58,15 +58,13 @@ module.exports.getActorById = (event, context, callback) => {
 
 module.exports.createNewActor = (event, context, callback) => {
   if (event.first_name && event.last_name) {
-    callback('Empty first name or last name');
-  } else {
     const lastUpdate = moment().format(timeformat);
     const queryCmd = `INSERT INTO prototype.actor (first_name, last_name, last_update)
                       VALUES ('${event.first_name}', '${event.last_name}', '${lastUpdate}')
                       RETURNING last_update`;
     pgclient.connect()
       .then((client) => {
-        return pgclient.queryDatabase(client, queryCmd);
+        return pgquery.queryDatabase(client, queryCmd);
       })
       .then((res) => {
         res.client.release(true);
@@ -78,6 +76,14 @@ module.exports.createNewActor = (event, context, callback) => {
           body: JSON.stringify(err)
         });
       });
+  } else {
+    const err = {
+      error: 'Empty first name or last name'
+    };
+    callback(null, {
+      statusCode: 400,
+      body: JSON.stringify(err)
+    });
   }
 };
 
