@@ -16,7 +16,7 @@ module.exports.getAllCountries = (event, context, callback) => {
     })
     .catch((err) => {
       callback(null, {
-        statusCode: 404,
+        statusCode: 400,
         body: JSON.stringify(err)
       });
     });
@@ -34,7 +34,8 @@ module.exports.getCountryById = (event, context, callback) => {
       res.client.release(true);
       if (!JSON.stringify(res.data.rows[0])) {
         return Promise.reject({
-          error: 'Country not found'
+          error: 'Country not found',
+          code: 404
         });
       }
       return Promise.resolve({
@@ -47,7 +48,7 @@ module.exports.getCountryById = (event, context, callback) => {
     })
     .catch((err) => {
       callback(null, {
-        statusCode: 404,
+        statusCode: (err.code ? err.code : 400),
         body: JSON.stringify(err)
       });
     });

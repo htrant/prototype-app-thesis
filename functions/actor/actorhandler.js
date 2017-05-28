@@ -22,7 +22,7 @@ module.exports.getAllActors = (event, context, callback) => {
     })
     .catch((err) => {
       callback(null, {
-        statusCode: 404,
+        statusCode: 400,
         body: JSON.stringify(err)
       });
     });
@@ -40,7 +40,8 @@ module.exports.getActorById = (event, context, callback) => {
       res.client.release(true);
       if (!JSON.stringify(res.data.rows[0])) {
         return Promise.reject({
-          error: 'Actor not found'
+          error: 'Actor not found',
+          code: 404
         });
       }
       return Promise.resolve(res.data.rows[0]);
@@ -50,7 +51,7 @@ module.exports.getActorById = (event, context, callback) => {
     })
     .catch((err) => {
       callback(null, {
-        statusCode: 404,
+        statusCode: (err.code ? err.code : 400),
         body: JSON.stringify(err)
       });
     });
@@ -103,7 +104,9 @@ module.exports.updateActor = (event, context, callback) => {
       .then((res) => {
         if (!JSON.stringify(res.data.rows[0])) {
           return Promise.reject({
-            error: 'Actor not found'
+            client: res.client,
+            error: 'Actor not found',
+            code: 404
           });
         }
         return Promise.resolve({
@@ -129,8 +132,12 @@ module.exports.updateActor = (event, context, callback) => {
         callback(null, lambdaResponse(res.data.rows[0]));
       })
       .catch((err) => {
+        if (err.client) {
+          err.client.release(true);
+          delete err.client;
+        }
         callback(null, {
-          statusCode: 404,
+          statusCode: (err.code ? err.code : 400),
           body: JSON.stringify(err)
         });
       });
