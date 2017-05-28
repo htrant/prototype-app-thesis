@@ -36,7 +36,7 @@ module.exports.getActorById = (event, context, callback) => {
     .then((res) => {
       res.client.release(true);
       if (!JSON.stringify(res.data.rows[0])) {
-        return Promise.reject(new Error('Actor not found'));
+        return Promise.reject('Actor not found');
       }
       return Promise.resolve(res.data.rows[0]);
     })
@@ -85,7 +85,7 @@ module.exports.updateActor = (event, context, callback) => {
       })
       .then((res) => {
         if (!JSON.stringify(res.data.rows[0])) {
-          return Promise.reject(new Error('Actor not found'));
+          return Promise.reject('Actor not found');
         }
         return Promise.resolve({
           actor: res.data.rows[0],
@@ -128,7 +128,7 @@ module.exports.deleteActor = (event, context, callback) => {
     })
     .then((res) => {
       if (!JSON.stringify(res.data.rows[0])) {
-        return Promise.reject(new Error('Actor not found'));
+        return Promise.reject('Actor not found');
       }
       return pgclient.queryDatabase(res.client, delQuery);
     })

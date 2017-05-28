@@ -30,7 +30,7 @@ module.exports.getCountryById = (event, context, callback) => {
     .then((res) => {
       res.client.release(true);
       if (!JSON.stringify(res.data.rows[0])) {
-        return Promise.reject(new Error('Country not found'));
+        return Promise.reject('Country not found');
       }
       return Promise.resolve({
         statusCode: 200,
