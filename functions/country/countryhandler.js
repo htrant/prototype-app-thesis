@@ -18,15 +18,15 @@ function queryDatabase(client, query) {
 module.exports.getAllCountries = (event, context, callback) => {
   pgclient.connect()
     .then((client) => {
-      client.query('SELECT * FROM prototype.country')
-        .then((res) => {
-          client.release(true);
-          const response = {
-            statusCode: 200,
-            body: JSON.stringify(res.rows)
-          };
-          callback(null, response);
-        });
+      return queryDatabase(client, 'SELECT * FROM prototype.country');
+    })
+    .then((res) => {
+      res.client.release(true);
+      const response = {
+        statusCode: 200,
+        body: JSON.stringify(res.data.rows)
+      };
+      callback(null, response);
     })
     .catch((err) => {
       callback(err);
