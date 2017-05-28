@@ -29,20 +29,21 @@ module.exports.getCountryById = (event, context, callback) => {
     })
     .then((res) => {
       res.client.release(true);
-      return new Promise((resolve, reject) => {
-        if (!JSON.stringify(res.data.rows[0])) {
-          reject('Country not found');
-        }
-        resolve({
-          statusCode: 200,
-          body: JSON.stringify(res.data.rows[0])
-        });
+      if (!JSON.stringify(res.data.rows[0])) {
+        return Promise.reject('Country not found');
+      }
+      return Promise.resolve({
+        statusCode: 200,
+        body: JSON.stringify(res.data.rows[0])
       });
     })
     .then((res) => {
       callback(null, res);
     })
     .catch((err) => {
-      callback(err);
+      callback(null, {
+        statusCode: 400,
+        body: err
+      });
     });
 };
