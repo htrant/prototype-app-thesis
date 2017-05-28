@@ -22,7 +22,7 @@ module.exports.getAllActors = (event, context, callback) => {
     })
     .catch((err) => {
       callback(null, {
-        statusCode: 400,
+        statusCode: 404,
         body: JSON.stringify(err)
       });
     });
@@ -50,7 +50,7 @@ module.exports.getActorById = (event, context, callback) => {
     })
     .catch((err) => {
       callback(null, {
-        statusCode: 400,
+        statusCode: 404,
         body: JSON.stringify(err)
       });
     });
@@ -72,7 +72,7 @@ module.exports.createNewActor = (event, context, callback) => {
       })
       .catch((err) => {
         callback(null, {
-          statusCode: 400,
+          statusCode: 404,
           body: JSON.stringify(err)
         });
       });
@@ -130,7 +130,7 @@ module.exports.updateActor = (event, context, callback) => {
       })
       .catch((err) => {
         callback(null, {
-          statusCode: 400,
+          statusCode: 404,
           body: JSON.stringify(err)
         });
       });
@@ -162,7 +162,7 @@ module.exports.deleteActor = (event, context, callback) => {
     })
     .catch((err) => {
       callback(null, {
-        statusCode: 400,
+        statusCode: 404,
         body: JSON.stringify(err)
       });
     });
