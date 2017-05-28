@@ -1,0 +1,37 @@
+{
+  "resource": "/v1/actor/{id}",
+  "path": "/v1/actor/215",
+  "httpMethod": "PUT",
+  "headers": null,
+  "queryStringParameters": null,
+  "pathParameters": {
+    "id": "215"
+  },
+  "stageVariables": null,
+  "requestContext": {
+    "path": "/v1/actor/{id}",
+    "accountId": "429677589413",
+    "resourceId": "8sawqp",
+    "stage": "test-invoke-stage",
+    "requestId": "test-invoke-request",
+    "identity": {
+      "cognitoIdentityPoolId": null,
+      "accountId": "429689745603",
+      "cognitoIdentityId": null,
+      "caller": "546789304857",
+      "apiKey": "test-invoke-api-key",
+      "sourceIp": "test-invoke-source-ip",
+      "accessKey": "UHSGETQL63ZH7754TZGQ",
+      "cognitoAuthenticationType": null,
+      "cognitoAuthenticationProvider": null,
+      "userArn": "arn:aws:iam::546789304857:root",
+      "userAgent": "Apache-HttpClient/4.5.x (Java/1.8.0_112)",
+      "user": "789456304857"
+    },
+    "resourcePath": "/v1/actor/{id}",
+    "httpMethod": "PUT",
+    "apiId": "f65yjfgi68"
+  },
+  "body": "{\n \"first_name\": \"Bob\",\n \"last_name\": \"Craig\"\n}",
+  "isBase64Encoded": false
+}

@@ -58,10 +58,11 @@ module.exports.getActorById = (event, context, callback) => {
 };
 
 module.exports.createNewActor = (event, context, callback) => {
-  if (event.body.first_name && event.body.last_name) {
+  const body = JSON.parse(event.body);
+  if (body.first_name && body.last_name) {
     const lastUpdate = moment().format(timeformat);
     const queryCmd = `INSERT INTO prototype.actor (first_name, last_name, last_update)
-                      VALUES ('${event.body.first_name}', '${event.body.last_name}', '${lastUpdate}')
+                      VALUES ('${body.first_name}', '${body.last_name}', '${lastUpdate}')
                       RETURNING last_update`;
     pgclient.connect()
       .then((client) => {
@@ -89,12 +90,9 @@ module.exports.createNewActor = (event, context, callback) => {
 };
 
 module.exports.updateActor = (event, context, callback) => {
-  if (event.body.first_name && event.body.last_name) {
-    callback(null, lambdaResponse({
-      message: 'No update for this actor'
-    }));
-  } else {
-    const selQuery = `SELECT actor_id
+  const body = JSON.parse(event.body);
+  if (body.first_name || body.last_name) {
+    const selQuery = `SELECT actor_id, first_name, last_name
                       FROM prototype.actor
                       WHERE actor_id = ${event.pathParameters.id}`;
     pgclient.connect()
@@ -110,14 +108,14 @@ module.exports.updateActor = (event, context, callback) => {
           });
         }
         return Promise.resolve({
-          actor: res.data.rows[0],
+          actor: JSON.parse(JSON.stringify(res.data.rows[0])),
           client: res.client
         });
       })
       .then((res) => {
         const actor = res.actor;
-        const firstName = event.body.first_name ? event.body.first_name : actor.first_name;
-        const lastName = event.body.last_name ? event.body.last_name : actor.last_name;
+        const firstName = body.first_name ? body.first_name : actor.first_name;
+        const lastName = body.last_name ? body.last_name : actor.last_name;
         const lastUpdate = moment().format(timeformat);
         const updateQuery = `UPDATE prototype.actor
                              SET first_name = '${firstName}',
@@ -141,6 +139,10 @@ module.exports.updateActor = (event, context, callback) => {
           body: JSON.stringify(err)
         });
       });
+  } else {
+    callback(null, lambdaResponse({
+      message: 'No update for this actor'
+    }));
   }
 };
 
