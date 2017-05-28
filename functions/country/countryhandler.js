@@ -17,7 +17,7 @@ module.exports.getAllCountries = (event, context, callback) => {
     .catch((err) => {
       callback(null, {
         statusCode: 400,
-        body: JSON.stringify(err);
+        body: JSON.stringify(err)
       });
     });
 };
@@ -48,7 +48,7 @@ module.exports.getCountryById = (event, context, callback) => {
     .catch((err) => {
       callback(null, {
         statusCode: 400,
-        body: JSON.stringify(err);
+        body: JSON.stringify(err)
       });
     });
 };
