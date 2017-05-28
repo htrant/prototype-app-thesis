@@ -16,7 +16,7 @@ module.exports.getAllCountries = (event, context, callback) => {
     })
     .catch((err) => {
       callback(null, {
-        statusCode: 400,
+        statusCode: 404,
         body: JSON.stringify(err)
       });
     });
@@ -47,7 +47,7 @@ module.exports.getCountryById = (event, context, callback) => {
     })
     .catch((err) => {
       callback(null, {
-        statusCode: 400,
+        statusCode: 404,
         body: JSON.stringify(err)
       });
     });
