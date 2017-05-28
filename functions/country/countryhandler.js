@@ -1,24 +1,10 @@
 const pgclient = require('../helper/pgclient');
-
-function queryDatabase(client, query) {
-  return new Promise((resolve, reject) => {
-    client.query(query)
-      .then((res) => {
-        resolve({
-          client,
-          data: res
-        });
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-}
+const pgquery = require('../helper/pgquery');
 
 module.exports.getAllCountries = (event, context, callback) => {
   pgclient.connect()
     .then((client) => {
-      return queryDatabase(client, 'SELECT * FROM prototype.country');
+      return pgquery.queryDatabase(client, 'SELECT * FROM prototype.country');
     })
     .then((res) => {
       res.client.release(true);
@@ -39,7 +25,7 @@ module.exports.getCountryById = (event, context, callback) => {
                     LIMIT 1`;
   pgclient.connect()
     .then((client) => {
-      return queryDatabase(client, queryCmd);
+      return pgquery.queryDatabase(client, queryCmd);
     })
     .then((res) => {
       res.client.release(true);
