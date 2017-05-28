@@ -141,7 +141,7 @@ module.exports.deleteActor = (event, context, callback) => {
   const delQuery = `DELETE FROM prototype.actor
                     WHERE actor_id = ${event.pathParameters.id}
                     RETURNING last_update`;
-  const selQuery = `SELECT COUNT(actor_id)
+  const selQuery = `SELECT actor_id
                     FROM prototype.actor
                     WHERE actor_id = ${event.pathParameters.id}`;
   pgclient.connect()
@@ -151,18 +151,24 @@ module.exports.deleteActor = (event, context, callback) => {
     .then((res) => {
       if (!JSON.stringify(res.data.rows[0])) {
         return Promise.reject({
-          error: 'Actor not found'
+          client: res.client,
+          error: 'Actor not found',
+          code: 404
         });
       }
-      return pgclient.queryDatabase(res.client, delQuery);
+      return pgquery.queryDatabase(res.client, delQuery);
     })
     .then((res) => {
       res.client.release(true);
       callback(null, lambdaResponse(res.data.rows[0]));
     })
     .catch((err) => {
+      if (err.client) {
+        err.client.release(true);
+        delete err.client;
+      }
       callback(null, {
-        statusCode: 404,
+        statusCode: (err.code ? err.code : 400),
         body: JSON.stringify(err)
       });
     });
