@@ -21,7 +21,10 @@ module.exports.getAllActors = (event, context, callback) => {
       callback(null, lambdaResponse(res.data.rows));
     })
     .catch((err) => {
-      callback(err);
+      callback(null, {
+        statusCode: 400,
+        body: JSON.stringify(err)
+      });
     });
 };
 
@@ -36,7 +39,9 @@ module.exports.getActorById = (event, context, callback) => {
     .then((res) => {
       res.client.release(true);
       if (!JSON.stringify(res.data.rows[0])) {
-        return Promise.reject('Actor not found');
+        return Promise.reject({
+          error: 'Actor not found'
+        });
       }
       return Promise.resolve(res.data.rows[0]);
     })
@@ -44,7 +49,10 @@ module.exports.getActorById = (event, context, callback) => {
       callback(null, lambdaResponse(res));
     })
     .catch((err) => {
-      callback(err);
+      callback(null, {
+        statusCode: 400,
+        body: JSON.stringify(err)
+      });
     });
 };
 
@@ -65,7 +73,10 @@ module.exports.createNewActor = (event, context, callback) => {
         callback(null, lambdaResponse(res.data.rows[0]));
       })
       .catch((err) => {
-        callback(err);
+        callback(null, {
+          statusCode: 400,
+          body: JSON.stringify(err)
+        });
       });
   }
 };
@@ -85,7 +96,9 @@ module.exports.updateActor = (event, context, callback) => {
       })
       .then((res) => {
         if (!JSON.stringify(res.data.rows[0])) {
-          return Promise.reject('Actor not found');
+          return Promise.reject({
+            error: 'Actor not found'
+          });
         }
         return Promise.resolve({
           actor: res.data.rows[0],
@@ -110,7 +123,10 @@ module.exports.updateActor = (event, context, callback) => {
         callback(null, lambdaResponse(res.data.rows[0]));
       })
       .catch((err) => {
-        callback(err);
+        callback(null, {
+          statusCode: 400,
+          body: JSON.stringify(err)
+        });
       });
   }
 };
@@ -128,7 +144,9 @@ module.exports.deleteActor = (event, context, callback) => {
     })
     .then((res) => {
       if (!JSON.stringify(res.data.rows[0])) {
-        return Promise.reject('Actor not found');
+        return Promise.reject({
+          error: 'Actor not found'
+        });
       }
       return pgclient.queryDatabase(res.client, delQuery);
     })
@@ -137,6 +155,9 @@ module.exports.deleteActor = (event, context, callback) => {
       callback(null, lambdaResponse(res.data.rows[0]));
     })
     .catch((err) => {
-      callback(err);
+      callback(null, {
+        statusCode: 400,
+        body: JSON.stringify(err)
+      });
     });
 };
