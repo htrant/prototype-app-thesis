@@ -22,7 +22,7 @@ module.exports.getAllActors = (event, context, callback) => {
     })
     .catch((err) => {
       callback(null, {
-        statusCode: 404,
+        statusCode: 400,
         body: JSON.stringify(err)
       });
     });
@@ -40,7 +40,8 @@ module.exports.getActorById = (event, context, callback) => {
       res.client.release(true);
       if (!JSON.stringify(res.data.rows[0])) {
         return Promise.reject({
-          error: 'Actor not found'
+          error: 'Actor not found',
+          code: 404
         });
       }
       return Promise.resolve(res.data.rows[0]);
@@ -50,7 +51,7 @@ module.exports.getActorById = (event, context, callback) => {
     })
     .catch((err) => {
       callback(null, {
-        statusCode: 404,
+        statusCode: (err.code ? err.code : 400),
         body: JSON.stringify(err)
       });
     });
@@ -103,7 +104,9 @@ module.exports.updateActor = (event, context, callback) => {
       .then((res) => {
         if (!JSON.stringify(res.data.rows[0])) {
           return Promise.reject({
-            error: 'Actor not found'
+            client: res.client,
+            error: 'Actor not found',
+            code: 404
           });
         }
         return Promise.resolve({
@@ -129,8 +132,12 @@ module.exports.updateActor = (event, context, callback) => {
         callback(null, lambdaResponse(res.data.rows[0]));
       })
       .catch((err) => {
+        if (err.client) {
+          err.client.release(true);
+          delete err.client;
+        }
         callback(null, {
-          statusCode: 404,
+          statusCode: (err.code ? err.code : 400),
           body: JSON.stringify(err)
         });
       });
@@ -141,28 +148,34 @@ module.exports.deleteActor = (event, context, callback) => {
   const delQuery = `DELETE FROM prototype.actor
                     WHERE actor_id = ${event.pathParameters.id}
                     RETURNING last_update`;
-  const selQuery = `SELECT COUNT(actor_id)
+  const selQuery = `SELECT actor_id
                     FROM prototype.actor
                     WHERE actor_id = ${event.pathParameters.id}`;
   pgclient.connect()
     .then((client) => {
-      return pgclient.queryDatabase(client, selQuery);
+      return pgquery.queryDatabase(client, selQuery);
     })
     .then((res) => {
       if (!JSON.stringify(res.data.rows[0])) {
         return Promise.reject({
-          error: 'Actor not found'
+          client: res.client,
+          error: 'Actor not found',
+          code: 404
         });
       }
-      return pgclient.queryDatabase(res.client, delQuery);
+      return pgquery.queryDatabase(res.client, delQuery);
     })
     .then((res) => {
       res.client.release(true);
       callback(null, lambdaResponse(res.data.rows[0]));
     })
     .catch((err) => {
+      if (err.client) {
+        err.client.release(true);
+        delete err.client;
+      }
       callback(null, {
-        statusCode: 404,
+        statusCode: (err.code ? err.code : 400),
         body: JSON.stringify(err)
       });
     });
