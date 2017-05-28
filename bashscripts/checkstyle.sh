@@ -12,10 +12,12 @@ for file in $JS_FILES; do
   else
     echo "$(tput setaf 1)$file: Failed"
     echo $CHECK_RESULT
-    ((COUNTER++))
+    COUNTER=$((COUNTER + 1))
   fi
   echo "$(tput setaf 7)------------------"
 done
+
+echo "Number of error file: " $COUNTER
 
 if [ "$COUNTER" -gt 0 ]; then
   exit 1
