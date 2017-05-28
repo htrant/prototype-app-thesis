@@ -1,4 +1,4 @@
-module.exports.queryDatabase = function (client, query) {
+module.exports.queryDatabase = function queryDatabase(client, query) {
   return new Promise((resolve, reject) => {
     client.query(query)
       .then((res) => {
