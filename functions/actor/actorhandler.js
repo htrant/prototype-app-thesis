@@ -94,12 +94,12 @@ module.exports.updateActor = (event, context, callback) => {
       message: 'No update for this actor'
     }));
   } else {
-    const selQuery = `SELECT COUNT(actor_id)
+    const selQuery = `SELECT actor_id
                       FROM prototype.actor
                       WHERE actor_id = ${event.pathParameters.id}`;
     pgclient.connect()
       .then((client) => {
-        return pgclient.queryDatabase(client, selQuery);
+        return pgquery.queryDatabase(client, selQuery);
       })
       .then((res) => {
         if (!JSON.stringify(res.data.rows[0])) {
@@ -125,7 +125,7 @@ module.exports.updateActor = (event, context, callback) => {
                               last_update = '${lastUpdate}'
                              WHERE actor_id = ${actor.actor_id}
                              RETURNING last_update`;
-        return pgclient.queryDatabase(res.client, updateQuery);
+        return pgquery.queryDatabase(res.client, updateQuery);
       })
       .then((res) => {
         res.client.release(true);
