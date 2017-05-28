@@ -1,4 +1,5 @@
 const pgclient = require('../helper/pgclient');
+const pgquery = require('../helper/pgquery');
 const moment = require('moment');
 
 const timeformat = 'YYYY-MM-DD HH:mm:ssZ';
@@ -13,11 +14,11 @@ const lambdaResponse = (object) => {
 module.exports.getAllActors = (event, context, callback) => {
   pgclient.connect()
     .then((client) => {
-      client.query('SELECT * FROM prototype.actor')
-        .then((res) => {
-          client.release(true);
-          callback(null, lambdaResponse(res.rows));
-        });
+      return pgquery.queryDatabase(client, 'SELECT * FROM prototype.actor');
+    })
+    .then((res) => {
+      res.client.release(true);
+      callback(null, lambdaResponse(res.data.rows));
     })
     .catch((err) => {
       callback(err);
@@ -30,17 +31,17 @@ module.exports.getActorById = (event, context, callback) => {
                     LIMIT 1`;
   pgclient.connect()
     .then((client) => {
-      client.query(queryCmd)
-        .then((res) => {
-          client.release(true);
-          if (!JSON.parse(JSON.stringify(res.rows[0]))) {
-            return Promise.reject(new Error('Actor not found'));
-          }
-          return Promise.resolve(res.rows[0]);
-        });
+      return pgquery.queryDatabase(client, queryCmd);
     })
-    .then((response) => {
-      callback(null, lambdaResponse(response));
+    .then((res) => {
+      res.client.release(true);
+      if (!JSON.stringify(res.data.rows[0])) {
+        return Promise.reject(new Error('Actor not found'));
+      }
+      return Promise.resolve(res.data.rows[0]);
+    })
+    .then((res) => {
+      callback(null, lambdaResponse(res));
     })
     .catch((err) => {
       callback(err);
