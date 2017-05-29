@@ -1,21 +1,83 @@
 service: prototype-app
-frameworkVersion: "=1.11.0"
+
+frameworkVersion: ">=1.11.0"
 
 provider:
   name: aws
-  runtime: nodejs6.10
-  stage: dev
-  region: eu-west-1
   profile: awsdev
+  region: eu-west-1
+  stage: ${opt:stage}
+  runtime: nodejs6.10
+  memorySize: 128
+  timeout: 6
+  apiKeys:
+    - ${opt:stage}-devkey
+
+custom:
+  apiversion: v1
 
 functions:
   probeGetHealth:
     handler: functions/probe/probehandler.getHealth
     description: Check health status
-    runtime: nodejs6.10
-    memorySize: 128
-    timeout: 6
     events:
       - http:
           method: get
-          path: probe/health
+          path: ${self:custom.apiversion}/probe/health
+          private: false
+  actorGetAll:
+    handler: functions/actor/actorhandler.getAllActors
+    description: Get list of all actors
+    events:
+      - http:
+          method: get
+          path: ${self:custom.apiversion}/actor
+          private: true
+  actorGetById:
+    handler: functions/actor/actorhandler.getActorById
+    description: Get an actor by id
+    events:
+      - http:
+          method: get
+          path: ${self:custom.apiversion}/actor/{id}
+          private: true
+  actorCreateNew:
+    handler: functions/actor/actorhandler.createNewActor
+    description: Create new actor and save to database
+    events:
+      - http:
+          method: post
+          path: ${self:custom.apiversion}/actor
+          private: true
+  actorUpdate:
+    handler: functions/actor/actorhandler.updateActor
+    description: Update information of an actor
+    events:
+      - http:
+          method: put
+          path: ${self:custom.apiversion}/actor/{id}
+          private: true
+  actorDelete:
+    handler: functions/actor/actorhandler.deleteActor
+    description: Delete an actor
+    events:
+      - http:
+          method: delete
+          path: ${self:custom.apiversion}/actor/{id}
+          private: true
+  countryGetAll:
+    handler: functions/country/countryhandler.getAllCountries
+    description: Get list of all countries
+    events:
+      - http:
+          method: get
+          path: ${self:custom.apiversion}/country
+          private: true
+  countryGetById:
+    handler: functions/country/countryhandler.getCountryById
+    description: Get a country by Id
+    events:
+      - http:
+          method: get
+          path: ${self:custom.apiversion}/country/{id}
+          private: true

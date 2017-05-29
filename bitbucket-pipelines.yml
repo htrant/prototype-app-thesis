@@ -4,14 +4,8 @@ pipelines:
     master:
       - step:
           script:
-            - npm install
-            - npm run style
-            - echo 'Deploying to PRODUCTION environment...'
-            - sh ./bashscripts/deploy.sh "prod"
+            - sh ./bashscripts/pipeline.sh "prod" $DB_PROD $PROBE_PROD
     develop:
       - step:
           script:
-            - npm install
-            - npm run style
-            - echo 'Deploying to STAGING environment...'
-            - sh ./bashscripts/deploy.sh "staging"
+            - sh ./bashscripts/pipeline.sh "staging" $DB_STAGING $PROBE_STAGING
