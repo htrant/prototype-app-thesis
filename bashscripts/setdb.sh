@@ -2,6 +2,7 @@
 
 SERVICE_STAGE=$1
 DBCONN_STRING=$2
+HEALTHCHECK_URL=$3
 
 if [ "$#" -ne 2 ]; then
   echo "$(tput setaf 1)No service stage or database connection string is specified"
@@ -12,6 +13,7 @@ fi
 rm -f .env
 
 echo "DB_PG_SCHEMA=prototype" >> .env
+echo "HEALTHCHECK_URL="$HEALTHCHECK_URL >> .env
 
 if [ "$SERVICE_STAGE" = "staging" ]; then
   echo "DB_STAGING="$DBCONN_STRING >> .env
