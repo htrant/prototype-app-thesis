@@ -13,7 +13,6 @@ fi
 rm -f .env
 
 echo "DB_PG_SCHEMA=prototype" >> .env
-echo "HEALTHCHECK_URL="$HEALTHCHECK_URL >> .env
 
 if [ "$SERVICE_STAGE" = "staging" ]; then
   echo "DB_STAGING="$DBCONN_STRING >> .env

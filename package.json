@@ -1,7 +1,7 @@
 {
   "name": "prototype-app",
   "version": "0.0.3",
-  "description": "",
+  "description": "Prototype-app",
   "main": "index.js",
   "dependencies": {
     "dotenv": "^4.0.0",

@@ -5,6 +5,7 @@ module.exports.getHealth = (event, context, callback) => {
     statusCode: 200,
     body: JSON.stringify({
       probe: pckg.version,
+      description: pckg.description,
       status: 'ok'
     })
   };

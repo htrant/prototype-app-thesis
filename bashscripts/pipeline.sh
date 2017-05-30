@@ -9,4 +9,5 @@ npm run style
 
 sh ./bashscripts/setdb.sh $ENV $DBCONN
 sh ./bashscripts/deploy.sh $ENV
+# echo "sh ./bashscripts/healthcheck.sh" $PROBEURL
 sh ./bashscripts/healthcheck.sh $PROBEURL
