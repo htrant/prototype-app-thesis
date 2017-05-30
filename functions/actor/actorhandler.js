@@ -41,7 +41,7 @@ module.exports.getActorById = (event, context, callback) => {
       if (!JSON.stringify(res.data.rows[0])) {
         return Promise.reject({
           error: 'Actor not found',
-          code: 404
+          code: 200
         });
       }
       return Promise.resolve(res.data.rows[0]);
@@ -104,7 +104,7 @@ module.exports.updateActor = (event, context, callback) => {
           return Promise.reject({
             client: res.client,
             error: 'Actor not found',
-            code: 404
+            code: 200
           });
         }
         return Promise.resolve({
@@ -162,7 +162,7 @@ module.exports.deleteActor = (event, context, callback) => {
         return Promise.reject({
           client: res.client,
           error: 'Actor not found',
-          code: 404
+          code: 200
         });
       }
       return pgquery.queryDatabase(res.client, delQuery);
